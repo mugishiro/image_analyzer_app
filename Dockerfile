@@ -1,17 +1,14 @@
-# Python 3.10のベースイメージを使用
-FROM python:3.10-slim
+# Python 3.10の軽量ベースイメージを使用
+FROM python:3.10-slim-bullseye
 
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# システムの依存関係をインストール
+# システムの依存関係をインストール（最小限）
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
-    libxrender-dev \
-    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Python依存関係をコピーしてインストール
