@@ -48,3 +48,31 @@ Thumbs.db
 
 # Uploads (will be created at runtime)
 uploads/
+
+# Documentation
+README.md
+*.md
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Railway
+railway.json
+
+# Development scripts
+run.sh
+
+# Test files
+tests/
+test_*.py
+*_test.py
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/

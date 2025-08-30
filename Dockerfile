@@ -9,11 +9,15 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Python依存関係をコピーしてインストール
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --no-deps -r requirements.txt \
+    && rm -rf ~/.cache/pip \
+    && find /usr/local/lib/python3.10/site-packages -name "*.pyc" -delete \
+    && find /usr/local/lib/python3.10/site-packages -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 
 # アプリケーションコードをコピー
 COPY . .
@@ -29,6 +33,4 @@ ENV FLASK_APP=app_flask.py
 ENV FLASK_ENV=production
 
 # アプリケーションを起動
-# 開発環境: python app_flask.py
-# 本番環境: gunicorn --config gunicorn.conf.py app_flask:app
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app_flask:app"]
+CMD ["python", "app_flask.py"]
