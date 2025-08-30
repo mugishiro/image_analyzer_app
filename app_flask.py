@@ -85,6 +85,11 @@ def analyze_image(image_path):
 def index():
     return render_template('index.html')
 
+@app.route('/ping')
+def ping():
+    """シンプルなヘルスチェック用エンドポイント"""
+    return jsonify({'status': 'ok', 'message': 'pong'}), 200
+
 @app.route('/health')
 def health():
     """ヘルスチェック用エンドポイント"""
@@ -180,8 +185,9 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    print("画像分析アプリを起動中...")
-    print(f"モデル読み込み開始...")
+    print("🚀 画像分析アプリを起動中...")
+    print(f"📁 アップロードディレクトリ: {UPLOAD_FOLDER}")
+    print(f"📁 アップロードディレクトリ存在: {os.path.exists(UPLOAD_FOLDER)}")
 
     # モデル読み込み状況の確認
     if model is not None:
@@ -190,14 +196,14 @@ if __name__ == '__main__':
         print("❌ モデル読み込み失敗")
 
     port = int(os.environ.get('PORT', 5000))
-    print(f"ポート: {port}")
-    print(f"アップロードディレクトリ: {UPLOAD_FOLDER}")
-    print(f"アップロードディレクトリ存在: {os.path.exists(UPLOAD_FOLDER)}")
+    print(f"🌐 ポート: {port}")
+    print(f"🔧 デバッグモード: {os.environ.get('FLASK_ENV') != 'production'}")
+    print(f"🏭 Flask環境: {os.environ.get('FLASK_ENV', 'development')}")
+
+    print("✅ アプリケーション起動完了")
+    print("📡 ヘルスチェックエンドポイント: /ping")
+    print("🔍 詳細ヘルスチェック: /health")
 
     # 本番環境ではデバッグモードを無効化
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
-    print(f"デバッグモード: {debug_mode}")
-    print(f"Flask環境: {os.environ.get('FLASK_ENV', 'development')}")
-
-    print("🚀 アプリケーション起動完了")
     app.run(debug=debug_mode, host='0.0.0.0', port=port)
