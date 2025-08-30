@@ -24,10 +24,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # YOLOモデルの読み込み
 def load_model():
     try:
+        print("YOLOv8モデルのダウンロードを開始...")
         model = YOLO('yolov8n.pt')
+        print("✅ YOLOv8モデルの読み込みが完了しました")
         return model
     except Exception as e:
-        print(f"モデルの読み込みに失敗しました: {e}")
+        print(f"❌ モデルの読み込みに失敗しました: {e}")
+        print(f"エラータイプ: {type(e).__name__}")
         return None
 
 # グローバル変数としてモデルを保持
@@ -85,11 +88,32 @@ def index():
 @app.route('/health')
 def health():
     """ヘルスチェック用エンドポイント"""
-    return jsonify({
-        'status': 'healthy',
-        'message': 'Image Analyzer App is running',
-        'model_loaded': model is not None
-    })
+    try:
+        # 基本的なアプリケーション状態
+        status = 'healthy'
+        message = 'Image Analyzer App is running'
+
+        # モデル読み込み状況の詳細確認
+        model_status = 'loaded' if model is not None else 'not_loaded'
+
+        # アップロードディレクトリの確認
+        upload_dir_exists = os.path.exists(UPLOAD_FOLDER)
+
+        return jsonify({
+            'status': status,
+            'message': message,
+            'model_loaded': model is not None,
+            'model_status': model_status,
+            'upload_dir_exists': upload_dir_exists,
+            'timestamp': datetime.now().isoformat()
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'message': f'Health check failed: {str(e)}',
+            'model_loaded': False,
+            'error': str(e)
+        }), 500
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -157,10 +181,23 @@ def uploaded_file(filename):
 
 if __name__ == '__main__':
     print("画像分析アプリを起動中...")
+    print(f"モデル読み込み開始...")
+
+    # モデル読み込み状況の確認
+    if model is not None:
+        print(f"✅ モデル読み込み成功: {type(model).__name__}")
+    else:
+        print("❌ モデル読み込み失敗")
+
     port = int(os.environ.get('PORT', 5000))
     print(f"ポート: {port}")
-    print(f"モデル読み込み状況: {'成功' if model else '失敗'}")
+    print(f"アップロードディレクトリ: {UPLOAD_FOLDER}")
+    print(f"アップロードディレクトリ存在: {os.path.exists(UPLOAD_FOLDER)}")
 
     # 本番環境ではデバッグモードを無効化
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    print(f"デバッグモード: {debug_mode}")
+    print(f"Flask環境: {os.environ.get('FLASK_ENV', 'development')}")
+
+    print("🚀 アプリケーション起動完了")
     app.run(debug=debug_mode, host='0.0.0.0', port=port)
