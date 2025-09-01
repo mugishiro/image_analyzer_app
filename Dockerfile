@@ -4,13 +4,12 @@ FROM python:3.10-slim-bullseye
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# システムの依存関係をインストール（OpenCV用）
+# システムの依存関係をインストール
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libgl1-mesa-glx \
-    libglib2.0-0 \
     libgtk-3-0 \
     libavcodec-dev \
     libavformat-dev \
@@ -43,11 +42,9 @@ COPY . .
 # アップロードディレクトリを作成
 RUN mkdir -p uploads
 
-# Flaskがインストールされているかチェック
-RUN python -c "import flask; print('Flask version:', flask.__version__)"
-
-# Gitが利用可能かチェック
-RUN git --version
+# インストール確認
+RUN python -c "import flask; print('Flask version:', flask.__version__)" && \
+    git --version
 
 # ポートを公開（Railways用）
 EXPOSE 8080

@@ -226,21 +226,8 @@ if __name__ == '__main__':
     print(f"🔍 環境変数PORT: {os.environ.get('PORT', 'not set')}")
 
     print("✅ アプリケーション起動完了")
-    print("📡 ヘルスチェックエンドポイント: /ping")
-    print("🔍 詳細ヘルスチェック: /health")
-    print("🏠 ルートエンドポイント: /")
-    print(f"🚀 サーバーURL: http://0.0.0.0:{port}")
-    print(f"🌐 外部アクセス可能なポート: {port}")
+    print(f"🚀 サーバー起動: http://0.0.0.0:{port}")
 
     # 本番環境ではデバッグモードを無効化
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
-
-    # Railways用の設定: すべてのインターフェースでリッスン
-    print(f"🚀 Flaskサーバーを起動: host=0.0.0.0, port={port}, debug={debug_mode}")
-    print(f"🔧 環境変数: PORT={os.environ.get('PORT', 'not set')}")
-    print(f"🔧 環境変数: RAILWAY_STATIC_URL={os.environ.get('RAILWAY_STATIC_URL', 'not set')}")
-    try:
-        app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)
-    except Exception as e:
-        print(f"❌ Flaskサーバー起動失敗: {e}")
-        raise e
+    app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)
