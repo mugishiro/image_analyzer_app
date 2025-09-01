@@ -112,9 +112,9 @@ def ping():
     return jsonify({'status': 'ok', 'message': 'pong'}), 200
 
 @app.route('/')
-def root():
-    """ルートエンドポイント"""
-    return jsonify({'status': 'ok', 'message': 'Image Analyzer App is running'}), 200
+def index():
+    """メインUIページ"""
+    return render_template('index.html')
 
 @app.route('/health')
 def health():
