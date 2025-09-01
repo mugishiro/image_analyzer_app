@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libtiff-dev \
     libatlas-base-dev \
     gfortran \
+    git \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -44,6 +45,9 @@ RUN mkdir -p uploads
 
 # Flaskがインストールされているかチェック
 RUN python -c "import flask; print('Flask version:', flask.__version__)"
+
+# Gitが利用可能かチェック
+RUN git --version
 
 # ポート5000を公開
 EXPOSE 5000
