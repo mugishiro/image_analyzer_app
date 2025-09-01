@@ -7,12 +7,14 @@ workers = multiprocessing.cpu_count() * 2 + 1
 # ワーカークラス
 worker_class = 'sync'
 
-# バインドアドレス
-bind = '0.0.0.0:5000'
+# バインドアドレス（Railways用）
+import os
+port = int(os.environ.get('PORT', 5000))
+bind = f'0.0.0.0:{port}'
 
 # タイムアウト設定（秒）
-timeout = 120
-keepalive = 2
+timeout = 300
+keepalive = 5
 
 # ログ設定
 accesslog = '-'

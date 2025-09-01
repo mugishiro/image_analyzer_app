@@ -33,8 +33,25 @@ def load_model():
         print(f"エラータイプ: {type(e).__name__}")
         return None
 
-# グローバル変数としてモデルを保持
-model = load_model()
+# グローバル変数としてモデルを保持（初期化時はNone）
+model = None
+model_loading = False
+model_loaded = False
+
+def initialize_model():
+    """モデルを非同期で初期化"""
+    global model, model_loading, model_loaded
+    if not model_loading and not model_loaded:
+        model_loading = True
+        try:
+            model = load_model()
+            model_loaded = True
+            print("✅ モデル初期化完了")
+        except Exception as e:
+            print(f"❌ モデル初期化失敗: {e}")
+            model_loaded = False
+        finally:
+            model_loading = False
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -43,6 +60,10 @@ def allowed_file(filename):
 def analyze_image(image_path):
     """画像を分析して物体検出を行う"""
     try:
+        # モデルが読み込まれていない場合は初期化を試行
+        if model is None and not model_loading:
+            initialize_model()
+
         if model is None:
             return {"error": "モデルが読み込めませんでした"}
 
@@ -94,7 +115,8 @@ def ping():
             'status': 'ok',
             'message': 'pong',
             'timestamp': datetime.now().isoformat(),
-            'model_loaded': model is not None,
+            'model_loaded': model_loaded,
+            'model_loading': model_loading,
             'upload_dir_exists': os.path.exists(UPLOAD_FOLDER)
         }
         return jsonify(response), 200
@@ -204,11 +226,9 @@ if __name__ == '__main__':
     print(f"📁 アップロードディレクトリ: {UPLOAD_FOLDER}")
     print(f"📁 アップロードディレクトリ存在: {os.path.exists(UPLOAD_FOLDER)}")
 
-    # モデル読み込み状況の確認
-    if model is not None:
-        print(f"✅ モデル読み込み成功: {type(model).__name__}")
-    else:
-        print("❌ モデル読み込み失敗")
+    # モデル初期化を開始（非同期）
+    print("🔄 モデル初期化を開始...")
+    initialize_model()
 
     # RailwaysではPORT環境変数が動的に割り当てられる
     port = int(os.environ.get('PORT', 5000))
