@@ -88,7 +88,22 @@ def index():
 @app.route('/ping')
 def ping():
     """シンプルなヘルスチェック用エンドポイント"""
-    return jsonify({'status': 'ok', 'message': 'pong'}), 200
+    try:
+        # 基本的なアプリケーション状態をチェック
+        response = {
+            'status': 'ok',
+            'message': 'pong',
+            'timestamp': datetime.now().isoformat(),
+            'model_loaded': model is not None,
+            'upload_dir_exists': os.path.exists(UPLOAD_FOLDER)
+        }
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Health check failed: {str(e)}',
+            'timestamp': datetime.now().isoformat()
+        }), 500
 
 @app.route('/health')
 def health():
@@ -195,6 +210,7 @@ if __name__ == '__main__':
     else:
         print("❌ モデル読み込み失敗")
 
+    # RailwaysではPORT環境変数が動的に割り当てられる
     port = int(os.environ.get('PORT', 5000))
     print(f"🌐 ポート: {port}")
     print(f"🔧 デバッグモード: {os.environ.get('FLASK_ENV') != 'production'}")
@@ -206,4 +222,6 @@ if __name__ == '__main__':
 
     # 本番環境ではデバッグモードを無効化
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
-    app.run(debug=debug_mode, host='0.0.0.0', port=port)
+
+    # Railways用の設定: すべてのインターフェースでリッスン
+    app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)

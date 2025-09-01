@@ -31,6 +31,7 @@ EXPOSE 5000
 # 環境変数を設定
 ENV FLASK_APP=app_flask.py
 ENV FLASK_ENV=production
+ENV PYTHONUNBUFFERED=1
 
 # アプリケーションを起動
 CMD ["python", "app_flask.py"]
