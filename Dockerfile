@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir flask==2.3.0 && \
+    pip install --no-cache-dir opencv-python-headless && \
     pip install --no-cache-dir -r requirements.txt && \
     pip list && \
     rm -rf ~/.cache/pip
