@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
 
 # Python依存関係をコピーしてインストール
 COPY requirements.txt .
-RUN pip install --no-cache-dir --no-deps -r requirements.txt \
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir gunicorn==21.2.0 \
     && rm -rf ~/.cache/pip \
     && find /usr/local/lib/python3.10/site-packages -name "*.pyc" -delete \
     && find /usr/local/lib/python3.10/site-packages -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
@@ -34,4 +35,4 @@ ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
 
 # アプリケーションを起動（Gunicorn使用）
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app_flask:app"]
+CMD ["python", "-m", "gunicorn", "--config", "gunicorn.conf.py", "app_flask:app"]
