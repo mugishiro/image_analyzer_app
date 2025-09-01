@@ -4,11 +4,25 @@ FROM python:3.10-slim-bullseye
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# システムの依存関係をインストール（最小限）
+# システムの依存関係をインストール（OpenCV用）
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libv4l-dev \
+    libxvidcore-dev \
+    libx264-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libatlas-base-dev \
+    gfortran \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -16,7 +30,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir flask==2.3.0 && \
-    pip install --no-cache-dir opencv-python-headless && \
+    pip install --no-cache-dir opencv-python-headless==4.8.0.76 && \
     pip install --no-cache-dir torch==2.0.0+cpu torchvision==0.15.0+cpu --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir -r requirements.txt && \
     pip list && \
