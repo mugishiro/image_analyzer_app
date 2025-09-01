@@ -109,23 +109,7 @@ def index():
 @app.route('/ping')
 def ping():
     """シンプルなヘルスチェック用エンドポイント"""
-    try:
-        # 基本的なアプリケーション状態をチェック
-        response = {
-            'status': 'ok',
-            'message': 'pong',
-            'timestamp': datetime.now().isoformat(),
-            'model_loaded': model_loaded,
-            'model_loading': model_loading,
-            'upload_dir_exists': os.path.exists(UPLOAD_FOLDER)
-        }
-        return jsonify(response), 200
-    except Exception as e:
-        return jsonify({
-            'status': 'error',
-            'message': f'Health check failed: {str(e)}',
-            'timestamp': datetime.now().isoformat()
-        }), 500
+    return jsonify({'status': 'ok', 'message': 'pong'}), 200
 
 @app.route('/health')
 def health():
@@ -226,15 +210,15 @@ if __name__ == '__main__':
     print(f"📁 アップロードディレクトリ: {UPLOAD_FOLDER}")
     print(f"📁 アップロードディレクトリ存在: {os.path.exists(UPLOAD_FOLDER)}")
 
-    # モデル初期化を開始（非同期）
-    print("🔄 モデル初期化を開始...")
-    initialize_model()
+    # モデル初期化は後で行う（ヘルスチェックを優先）
+    print("🔄 モデル初期化は後で実行...")
 
     # RailwaysではPORT環境変数が動的に割り当てられる
     port = int(os.environ.get('PORT', 5000))
     print(f"🌐 ポート: {port}")
     print(f"🔧 デバッグモード: {os.environ.get('FLASK_ENV') != 'production'}")
     print(f"🏭 Flask環境: {os.environ.get('FLASK_ENV', 'development')}")
+    print(f"🔍 環境変数PORT: {os.environ.get('PORT', 'not set')}")
 
     print("✅ アプリケーション起動完了")
     print("📡 ヘルスチェックエンドポイント: /ping")
@@ -244,4 +228,5 @@ if __name__ == '__main__':
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
 
     # Railways用の設定: すべてのインターフェースでリッスン
+    print(f"🚀 Flaskサーバーを起動: host=0.0.0.0, port={port}, debug={debug_mode}")
     app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)

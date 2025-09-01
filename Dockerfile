@@ -34,5 +34,5 @@ ENV FLASK_APP=app_flask.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
 
-# アプリケーションを起動（Gunicorn使用）
-CMD ["python", "-m", "gunicorn", "--config", "gunicorn.conf.py", "app_flask:app"]
+# アプリケーションを起動（Flask直接起動）
+CMD ["python", "app_flask.py"]
