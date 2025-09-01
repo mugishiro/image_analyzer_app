@@ -237,6 +237,8 @@ if __name__ == '__main__':
 
     # Railways用の設定: すべてのインターフェースでリッスン
     print(f"🚀 Flaskサーバーを起動: host=0.0.0.0, port={port}, debug={debug_mode}")
+    print(f"🔧 環境変数: PORT={os.environ.get('PORT', 'not set')}")
+    print(f"🔧 環境変数: RAILWAY_STATIC_URL={os.environ.get('RAILWAY_STATIC_URL', 'not set')}")
     try:
         app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)
     except Exception as e:

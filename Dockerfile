@@ -49,8 +49,8 @@ RUN python -c "import flask; print('Flask version:', flask.__version__)"
 # Gitが利用可能かチェック
 RUN git --version
 
-# ポート5000を公開
-EXPOSE 5000
+# ポートを公開（Railways用）
+EXPOSE 8080
 
 # 環境変数を設定
 ENV FLASK_APP=app_flask.py
