@@ -14,17 +14,20 @@ RUN apt-get update && apt-get install -y \
 
 # Python依存関係をコピーしてインストール
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir gunicorn==21.2.0 \
-    && rm -rf ~/.cache/pip \
-    && find /usr/local/lib/python3.10/site-packages -name "*.pyc" -delete \
-    && find /usr/local/lib/python3.10/site-packages -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir flask==2.3.0 && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip list && \
+    rm -rf ~/.cache/pip
 
 # アプリケーションコードをコピー
 COPY . .
 
 # アップロードディレクトリを作成
 RUN mkdir -p uploads
+
+# Flaskがインストールされているかチェック
+RUN python -c "import flask; print('Flask version:', flask.__version__)"
 
 # ポート5000を公開
 EXPOSE 5000
