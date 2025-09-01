@@ -17,6 +17,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir flask==2.3.0 && \
     pip install --no-cache-dir opencv-python-headless && \
+    pip install --no-cache-dir torch==2.0.0+cpu torchvision==0.15.0+cpu --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir -r requirements.txt && \
     pip list && \
     rm -rf ~/.cache/pip
