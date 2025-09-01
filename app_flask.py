@@ -102,10 +102,6 @@ def analyze_image(image_path):
     except Exception as e:
         return {"error": f"画像分析中にエラーが発生しました: {str(e)}"}
 
-@app.route('/ui')
-def index():
-    return render_template('index.html')
-
 @app.route('/ping')
 def ping():
     """シンプルなヘルスチェック用エンドポイント"""
