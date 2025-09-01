@@ -102,7 +102,7 @@ def analyze_image(image_path):
     except Exception as e:
         return {"error": f"画像分析中にエラーが発生しました: {str(e)}"}
 
-@app.route('/')
+@app.route('/ui')
 def index():
     return render_template('index.html')
 
@@ -110,6 +110,11 @@ def index():
 def ping():
     """シンプルなヘルスチェック用エンドポイント"""
     return jsonify({'status': 'ok', 'message': 'pong'}), 200
+
+@app.route('/')
+def root():
+    """ルートエンドポイント"""
+    return jsonify({'status': 'ok', 'message': 'Image Analyzer App is running'}), 200
 
 @app.route('/health')
 def health():
@@ -223,10 +228,15 @@ if __name__ == '__main__':
     print("✅ アプリケーション起動完了")
     print("📡 ヘルスチェックエンドポイント: /ping")
     print("🔍 詳細ヘルスチェック: /health")
+    print("🏠 ルートエンドポイント: /")
 
     # 本番環境ではデバッグモードを無効化
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
 
     # Railways用の設定: すべてのインターフェースでリッスン
     print(f"🚀 Flaskサーバーを起動: host=0.0.0.0, port={port}, debug={debug_mode}")
-    app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)
+    try:
+        app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True)
+    except Exception as e:
+        print(f"❌ Flaskサーバー起動失敗: {e}")
+        raise e

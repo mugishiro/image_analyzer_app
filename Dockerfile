@@ -33,6 +33,7 @@ EXPOSE 5000
 ENV FLASK_APP=app_flask.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # アプリケーションを起動（Flask直接起動）
 CMD ["python", "app_flask.py"]
