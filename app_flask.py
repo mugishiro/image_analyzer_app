@@ -229,6 +229,8 @@ if __name__ == '__main__':
     print("📡 ヘルスチェックエンドポイント: /ping")
     print("🔍 詳細ヘルスチェック: /health")
     print("🏠 ルートエンドポイント: /")
+    print(f"🚀 サーバーURL: http://0.0.0.0:{port}")
+    print(f"🌐 外部アクセス可能なポート: {port}")
 
     # 本番環境ではデバッグモードを無効化
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
